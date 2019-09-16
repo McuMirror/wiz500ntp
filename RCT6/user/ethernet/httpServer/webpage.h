@@ -180,7 +180,7 @@
 								"</body>"\
 							"</html>"
 							
-#define index_page			"<html>"\
+#define index_page2			"<html>"\
 								"<head>"\
 								"<title>W5500-EVB Web Server</title>"\
 								"<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>"\
@@ -202,7 +202,173 @@
 									"<a href='ain_gauge.html'>Ex3> Analog Input: Google Gauge Chart</a>"\
 								"</body>"\
 							"</html>"							
-
+#define index_page	"<!DOCTYPE html>"\
+"<html>"\
+	"<head>"\
+	"<title>GPS Master clock configuration</title>"\
+	"<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>"\
+		"<style>"\
+			"body{font-family: Arial, Tahoma;font-size: 14px;}"\
+ 			"h1{color:black;font-size:18px;text-align:center;}"\
+			".btn {display: block;text-align: center;cursor: pointer;text-transform: uppercase;overflow: hidden;color: #fff;background-color: #D2691E;height: 30px;width: 80px;margin: auto;border-radius: 10pt}"\
+			".btn:hover {background-color: #E9967A;}"\
+			".tab{font-family:Arial; width: 498px; align : center; border: 0px; cellpadding:5px; cellspacing: 0px; height:50px;}"\
+			".sts_label{border: none;color: black;font-size: 15px;height: 30px;width: 60px;background: #F5F5DC;}"\
+			"#clock_info{height: 140px;border: 1px solid #CDCDCD;background-color: #F5F5DC;margin-bottom:5px;clear: both;text-align:center;}"\
+			"#clockdiv{color: #fff;display: inline-block;font-weight: 100px;text-align: center;font-size: 30px;}"\
+			"#clockdiv > div{padding: 10px;border-radius: 3px;background: #00BF96;display: inline-block;text-align: center; height:70px;width: 55px;}"\
+			".clock_label{padding: 5px;border-radius: 3px;background: #00816A;display: inline-block; height: 20px; width: 40px; color:white;overflow: hidden;font-weight: bold; font-size: 16px;text-align: center;}"\
+			".smalltext{padding-top: 5px;font-size: 16px;}"\
+			"#main{width: 500px;border: 1px solid #6495ED;padding: 0;margin-left: auto;margin-right: auto;}"\
+			"#head{border: 1px solid #CDCDCD;height: 70px;background-color:#008800;color:white;overflow: hidden;font-weight: bold;font-size:30px;text-align:center;margin-bottom:5px;}"\
+			"#net_info_general{min-height: 150px;border: 1px solid #CDCDCD;float:left;margin-bottom:5px;background-color: #F5F5DC;}"\
+			"#list_head{background-color:#FFCC99;height: 40px;width: 100%; display: inline-block;font-size: 18px;}"\
+			"#info{height: 90px;border: 1px solid #CDCDCD;background-color: #F5F5DC;margin-bottom:5px;clear: both;}"\
+			"#foot{background-color: #0099FF;border:1px solid #ccc;color:black;font-size:15px;height: 20px;overflow: hidden;padding-top: 5px;padding-bottom: 5px;text-align:center;}"\
+		"</style>"\
+	"</head>"\
+	"<body>"\
+		"<div id='main'>"\
+			"<div id='head'>"\
+				"GPS MASTER CLOCK CONFIGURATION"\
+			"</div>"\
+			"<div id='net_info_general'>"\
+				"<div id = 'list_head'>"\
+					"<h1>Network information</h1>"\
+				"</div>"\
+				"<table type ='table' class='tab'>"\
+					"<tbody>"\
+						"<tr>"\
+							"<td>IP adress:&nbsp</td>"\
+							"<td colspan='2'><input id='txtip' name='ip' type='text' disabled='disabled'/></td>"\
+						"</tr>"\
+						"<tr>"\
+							"<td>Subnet mask:&nbsp</td>"\
+							"<td colspan='2'><input id='txtsn' name='sn' type='text' disabled='disabled'/></td>"\
+						"</tr>"\
+					"</tbody>"\
+				"</table>"\
+				"<button type='button' class ='btn' onclick=location.href='config.html'>Setup</button>"\
+			"</div>"\
+			"<div id = 'clock_info'>"\
+				"<div id = 'list_head'>"\
+					"<h1>GPS time</h1>"\
+				"</div>"\
+				"<table type ='table' class='tab'>"\
+					"<tbody>"\
+						"<tr>"\
+							"<td>"\
+								"<div id='clockdiv'>"\
+									"<div>"\
+										"<input type='text' class='clock_label' id='txtdays' name='days' disabled='disabled' value=' '/>"\
+										"<div class='smalltext'>Days</div>"\
+									"</div>"\
+									"<div>"\
+										"<input type='text' class='clock_label' id='txtmonths' name='months' disabled='disabled' value=' '/>"\
+										"<div class='smalltext'>Months</div>"\
+									"</div>"\
+									"<div>"\
+										"<input type='text' class='clock_label' id='txtyears' name='years' disabled='disabled' value=' '/>"\
+										"<div class='smalltext'>Years</div>"\
+									"</div>"\
+									"<div>"\
+										"<input type='text' class='clock_label' id='txthours' name='hours' disabled='disabled' value=' '/>"\
+										"<div class='smalltext'>Hours</div>"\
+									"</div>"\
+									"<div>"\
+										"<input type='text' class='clock_label' id='txtminutes' name='minutes' disabled='disabled' value=' '/>"\
+										"<div class='smalltext'>Minutes</div>"\
+									"</div>"\
+									"<div>"\
+										"<input type='text' class='clock_label' id='txtseconds' name='seconds' disabled='disabled' value=' '/>"\
+										"<div class='smalltext'>Seconds</div>"\
+									"</div>"\
+								"</div>"\
+							"</td>"\
+						"</tr>"\
+					"</tbody>"\
+				"</table>"\
+			"</div>"\
+			"<div id = 'info'>"\
+				"<div id = 'list_head'>"\
+				"<h1>GPS status</h1>"\
+				"</div>"\
+				"<table type ='table' class='tab'>"\
+					"<tbody>"\
+						"<tr>"\
+							"<td style='color: #000000; width:25%; align:center'>GPS 01:&nbsp</td>"\
+							"<td style='color: #000000; width:15%; align: left'><input type='text' class='sts_label' id='txtgps01' name='gps01' disabled='disabled'/></td>"\
+							"<td style='color: #000000; width:20%'>"\
+							"<td style='color: #000000; width:25%; align:center'>GPS 02:&nbsp</td>"\
+							"<td style='color: #000000; width:15%; align:left'><input type='text' class='sts_label' id='txtgps02' name='gps02' disabled='disabled'/></td>"\
+						"</tr>"\
+					"</tbody>"\
+				"</table>"\
+			"</div>"\
+			"<div id = 'info'>"\
+				"<div id = 'list_head'>"\
+				"<h1>Power supply status</h1>"\
+				"</div>"\
+				"<table type ='table' class='tab'>"\
+					"<tbody>"\
+						"<tr>"\
+							"<td style='color: #000000; width:25%; align:center'>Power supply 01:&nbsp</td>"\
+							"<td style='color: #000000; width:15%; align: left'><input type='text' class='sts_label' id='txtpower01' name='power01' disabled='disabled'/></td>"\
+							"<td style='color: #000000; width:20%'>"\
+							"<td style='color: #000000; width:25%; align:center'>Power supply 02:&nbsp</td>"\
+							"<td style='color: #000000; width:15%; align:left'><input type='text' class='sts_label' id='txtpower02' name='power02' disabled='disabled'/></td>"\
+						"</tr>"\
+					"</tbody>"\
+				"</table>"\
+			"</div>"\
+			"<div id = 'info'>"\
+				"<div id = 'list_head'>"\
+				"<h1>Device version</h1>"\
+				"</div>"\
+				"<table type ='table' class='tab'>"\
+					"<tbody>"\
+						"<tr>"\
+							"<td style='color: #000000; width:30%; align:center'>Hardware version:&nbsp</td>"\
+							"<td style='color: #000000; width:10%; align: left'><input type='text' class='sts_label' value='Ver 2.1.1' disabled='disabled'/></td>"\
+							"<td style='color: #000000; width:20%'>"\
+							"<td style='color: #000000; width:30%; align:center'>Software version:&nbsp</td>"\
+							"<td style='color: #000000; width:10%; align:left'><input type='text' class='sts_label' value='Ver 2.1.2' disabled='disabled'/></td>"\
+						"</tr>"\
+					"</tbody>"\
+				"</table>"\
+			"</div>"\
+			"<div id = 'foot'>"\
+				"Powered by <a style='color: #000000; font-weight: bold; text-decoration: none'>Air Traffic Technical Company - <span style='color:red'>A</span><span style='color: blue;'>TTECH</span></a>"\
+			"</div>"\
+		"</div>"\
+		"<script>"\
+									"setInterval(calldata, 5000);"\
+									"function calldata(){"\
+									"var xhttp = new XMLHttpRequest();"\
+									"xhttp.onreadystatechange = function() {"\
+									"if (this.readyState == 4 && this.status == 200) {"\
+									"var txt = this.responseText;"\
+									"var obj = JSON.parse(txt);"\
+										"document.getElementById('txtip').value = obj.txtip;"\
+										"document.getElementById('txtsn').value = obj.txtsn;"\
+										"document.getElementById('txtdays').value = obj.txtdays;"\
+			"document.getElementById('txtmonths').value = '01';"\
+			"document.getElementById('txtyears').value = '2019';"\
+			"document.getElementById('txthours').value = '00';"\
+			"document.getElementById('txtminutes').value = '00';"\
+			"document.getElementById('txtseconds').value = '00';"\
+			"document.getElementById('txtgps01').value = 'ON';"\
+			"document.getElementById('txtgps02').value = 'OFF';"\
+			"document.getElementById('txtpower01').value = 'ON';"\
+			"document.getElementById('txtpower02').value = 'OFF';"\
+									"}"\
+									"};"\
+									"xhttp.open('GET', 'alldata.json', true); "\
+									"xhttp.send();"\
+									"}"\
+									"</script>"\
+	"</body>"\
+"</html>"
 
 #define netinfo_page 		"<!DOCTYPE html>"\
 							"<html>"\

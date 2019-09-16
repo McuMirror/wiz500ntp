@@ -144,7 +144,7 @@ uint8_t http_get_json_handler(uint8_t * uri_name, uint8_t * buf, uint32_t * file
 	{
 		;
 	}
-	else if(strcmp((const char *)uri_name, "abc.json") == 0)
+	else if(strcmp((const char *)uri_name, "alldata.json") == 0)
 	{
 		// To do
 		//printf("uri_name : %s\r\n",uri_name);
@@ -341,9 +341,9 @@ void make_json_netinfo(uint8_t * buf, uint16_t * len)
 {
 	wiz_NetInfo netinfo;
 	ctlnetwork(CN_GET_NETINFO, (void*) &netinfo);
-
+//{"mac":"00:08:DC:4F:EB:6E","txtip":"192.168.1.246","gw":"192.168.1.1","txtsn":"255.255.255.1","dns":"8.8.8.8","dhcp":"1","txtdays":"21","txtmonths":"01","txtyears":"2019","txthours":"01","txtminutes":"01","txtseconds":"01","txtgps01":"ON","txtgps02":"OFF","txtpower01":"ON","txtpower02":"OFF"}
 	// DHCP: 1 - Static, 2 - DHCP
-	*len = sprintf((char *)buf, "NetinfoCallback({\"mac\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\",\"ip\":\"%d.%d.%d.%d\",\"gw\":\"%d.%d.%d.%d\",\"sn\":\"%d.%d.%d.%d\",\"dns\":\"%d.%d.%d.%d\",\"dhcp\":\"%d\"});",
+	*len = sprintf((char *)buf, "{\"mac\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\",\"txtip\":\"%d.%d.%d.%d\",\"gw\":\"%d.%d.%d.%d\",\"txtsn\":\"%d.%d.%d.%d\",\"dns\":\"%d.%d.%d.%d\",\"dhcp\":\"%d\",\"txtdays\":\"21\"}",
 											netinfo.mac[0], netinfo.mac[1], netinfo.mac[2], netinfo.mac[3], netinfo.mac[4], netinfo.mac[5],
 											netinfo.ip[0], netinfo.ip[1], netinfo.ip[2], netinfo.ip[3],
 											netinfo.gw[0], netinfo.gw[1], netinfo.gw[2], netinfo.gw[3],
