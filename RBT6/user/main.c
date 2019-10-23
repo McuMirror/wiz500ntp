@@ -1,4 +1,7 @@
 /*
+- 23/Oct/2019 : Make new project on NTP PCB new, STM32F103RBT6. Check...
+								redefine STM32F10X_MD
+								HSE = 8MHz
 - 03/Sep/2019 : Make new project on STM32F103RCT6 WIZ550web https://www.wiznet.io/product-item/wiz550web/
 - Xtal : 12Mhz trong file system_stm32f10x.c thay doi SetSysClockTo72() : RCC_CFGR_PLLMULL9 => RCC_CFGR_PLLMULL6 do XT = 12Mhz
 - kiem tra printmcuclk() dam bao :
@@ -20,7 +23,7 @@ SYSCLK:72000000
 //#define HSE_VALUE    ((uint32_t)12000000) /*!< Value of the External oscillator in Hz */
 //
 #include "main.h"
-time_t timenow = 1566444407;
+time_t timenow = 1571818375;
 volatile uint8_t sec_cnt = 0;
 int8_t ledstt;
 
@@ -71,7 +74,7 @@ int main(void)
 	
 	printf("Run, now is %s\r\n",ctime(&timenow));
 	//Get time from ntp time server
-	//SNTP_init();
+	SNTP_init();
 	
 	
 	ntpserverdefaultconfig();
@@ -100,7 +103,7 @@ int main(void)
 			//timeinfo = localtime( &timenow );
 			//printf("sec_cnt :%d, timenow :%d\r\n",sec_cnt,timenow);
 			//Neu ko co mang cai nay se gay treo??? 19/Sep/2019
-			//SNTP_run();
+			SNTP_run();
 			//GPIO_PinWrite(GPIOA, 8, 1);
 			seconds++;
 			if(seconds == 60) seconds = 0;
