@@ -58,3 +58,39 @@ void wzn_event_handle(void);
 void ntpserverdefaultconfig(void);
 int32_t ntpserverprocess(void);
 
+//Tao ban tin NTP
+						//ntpserverdefaultconfig();
+						/*
+						serverPacket[0] = 0x24;   // LI, Version, Mode // Set version number and mode
+						serverPacket[1] = 1; // Stratum, or type of clock
+						serverPacket[2] = 0;     // Polling Interval
+						serverPacket[3] = -12;  // Peer Clock Precision
+						serverPacket[12] = 'G';
+						serverPacket[13] = 'P';
+						serverPacket[14] = 'S';
+
+						
+					serverPacket[0]=0x24;	// Leap 0x0, Version 0x3, Mode 0x4
+				  serverPacket[1]=0x03;	// Stratum 0x1, stratum (GPS)
+				  serverPacket[2]=0x06;	// polling minimum (64 seconds - default)
+				  //  serverPacket[3] = 0xFA; // precision (reference sketch - ~15 milliseconds)
+					//serverPacket[3] = 0xF7; // precision (2^-9 ~2 milliseconds)
+					serverPacket[3] = 0xE8; 
+					//  serverPacket[3] = 0x09; // precision (2^9 Testing)
+					// root delay
+					serverPacket[4]=0x0;
+					serverPacket[5]=0x0;
+					serverPacket[6]=0x2C;
+					serverPacket[7]=0x3C;
+					
+					serverPacket[8]=0x0;
+					serverPacket[9]=0x0;
+					serverPacket[10]=0x0E;
+					serverPacket[11] = 0x7D; // root dispersion
+					
+					serverPacket[12]=0x47;	// Reference ID, "G"
+					serverPacket[13]=0x50;	// Reference ID, "P"
+					serverPacket[14]=0x53;	// Reference ID, "S"
+					serverPacket[15]=0x00;	// Reference ID, 0x00
+
+						*/

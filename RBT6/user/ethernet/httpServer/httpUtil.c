@@ -16,6 +16,7 @@
 #include "httpUtil.h"
 #include "ConfigData.h"
 #include "eeprom_stm.h"//save IP
+#include "main.h"
 extern wiz_NetInfo gWIZNETINFO;
 /************************************************************************************************/
 #define DIOn			16
@@ -32,7 +33,7 @@ extern uint8_t years;
 extern uint8_t hours;
 extern uint8_t minutes;
 extern uint8_t seconds;
-
+extern int8_t lostSignal;
 // Pre-defined Get CGI functions
 void make_json_dio(uint8_t * buf, uint16_t * len, uint8_t pin);
 void make_json_ain(uint8_t * buf, uint16_t * len, uint8_t pin);
@@ -58,6 +59,27 @@ typedef enum
 } IO_Status_Type;
 
 uint8_t new_device_ip[4];
+void make_json_netinfo2(uint8_t * buf, uint16_t * len)
+{
+	wiz_NetInfo netinfo;
+	ctlnetwork(CN_GET_NETINFO, (void*) &netinfo);
+
+	// DHCP: 1 - Static, 2 - DHCP
+	*len = sprintf((char *)buf, "NetinfoCallback({\"mac\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\",\
+											\"ip\":\"%d.%d.%d.%d\",\
+											\"gw\":\"%d.%d.%d.%d\",\
+											\"sn\":\"%d.%d.%d.%d\",\
+											\"dns\":\"%d.%d.%d.%d\",\
+											\"dhcp\":\"%d\"\
+											});",
+											netinfo.mac[0], netinfo.mac[1], netinfo.mac[2], netinfo.mac[3], netinfo.mac[4], netinfo.mac[5],
+											netinfo.ip[0], netinfo.ip[1], netinfo.ip[2], netinfo.ip[3],
+											netinfo.gw[0], netinfo.gw[1], netinfo.gw[2], netinfo.gw[3],
+											netinfo.sn[0], netinfo.sn[1], netinfo.sn[2], netinfo.sn[3],
+											netinfo.dns[0], netinfo.dns[1], netinfo.dns[2], netinfo.dns[3],
+											netinfo.dhcp
+											);
+}
 /************************************************************************************************/
 uint8_t predefined_get_cgi_processor(uint8_t * uri_name, uint8_t * buf, uint16_t * len)
 {
@@ -75,7 +97,7 @@ uint8_t predefined_get_cgi_processor(uint8_t * uri_name, uint8_t * buf, uint16_t
 	}
 	else if(strcmp((const char *)uri_name, "get_netinfo.cgi") == 0)
 	{
-		make_json_netinfo(buf, len);
+		make_json_netinfo2(buf, len);
 	}
 	else
 	{
@@ -353,9 +375,34 @@ void make_json_netinfo(uint8_t * buf, uint16_t * len)
 {
 	wiz_NetInfo netinfo;
 	ctlnetwork(CN_GET_NETINFO, (void*) &netinfo);
+	//printf("sec :%d",seconds);
+	
 //{"mac":"00:08:DC:4F:EB:6E","txtip":"192.168.1.246","gw":"192.168.1.1","txtsn":"255.255.255.1","dns":"8.8.8.8","dhcp":"1","txtdays":"21","txtmonths":"01","txtyears":"2019","txthours":"01","txtminutes":"01","txtseconds":"01","txtgps01":"ON","txtgps02":"OFF","txtpower01":"ON","txtpower02":"OFF"}
 	// DHCP: 1 - Static, 2 - DHCP
-	*len = sprintf((char *)buf, "{\"mac\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\",\"txtip\":\"%d.%d.%d.%d\",\"gw\":\"%d.%d.%d.%d\",\"txtsn\":\"%d.%d.%d.%d\",\"dns\":\"%d.%d.%d.%d\",\"dhcp\":\"%d\",\"txtdays\":\"%d\",\"txtmonths\":\"%d\",\"txtyears\":\"%d\",\"txthours\":\"%d\",\"txtminutes\":\"%d\",\"txtseconds\":\"%d\",\"txtgps01\":\"%s\",\"txtgps02\":\"%s\",\"txtpower01\":\"%s\",\"txtpower02\":\"%s\"}",
+	if(lostSignal == LOST_GPS_MASTER)
+	{
+		*len = sprintf((char *)buf, "{\"mac\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\",\"txtip\":\"%d.%d.%d.%d\",\"gw\":\"%d.%d.%d.%d\",\"txtsn\":\"%d.%d.%d.%d\",\"dns\":\"%d.%d.%d.%d\",\"dhcp\":\"%d\",\"txtdays\":\"%d\",\"txtmonths\":\"%d\",\"txtyears\":\"%d\",\"txthours\":\"%d\",\"txtminutes\":\"%d\",\"txtseconds\":\"%d\",\"txtgps01\":\"%s\",\"txtgps02\":\"%s\",\"txtpower01\":\"%s\",\"txtpower02\":\"%s\"}",
+											netinfo.mac[0], netinfo.mac[1], netinfo.mac[2], netinfo.mac[3], netinfo.mac[4], netinfo.mac[5],
+											netinfo.ip[0], netinfo.ip[1], netinfo.ip[2], netinfo.ip[3],
+											netinfo.gw[0], netinfo.gw[1], netinfo.gw[2], netinfo.gw[3],
+											netinfo.sn[0], netinfo.sn[1], netinfo.sn[2], netinfo.sn[3],
+											netinfo.dns[0], netinfo.dns[1], netinfo.dns[2], netinfo.dns[3],
+											netinfo.dhcp,
+											0,
+											0,
+											0,
+											0,
+											0,
+											0,
+											gps1_stt?"NO SIGNAL":"NO SIGNAL",
+											gps2_stt?"NO SIGNAL":"NO SIGNAL",
+											power1_stt?"NO SIGNAL":"NO SIGNAL",
+											power2_stt?"NO SIGNAL":"NO SIGNAL"
+											);
+	}
+	else
+	{
+		*len = sprintf((char *)buf, "{\"mac\":\"%.2X:%.2X:%.2X:%.2X:%.2X:%.2X\",\"txtip\":\"%d.%d.%d.%d\",\"gw\":\"%d.%d.%d.%d\",\"txtsn\":\"%d.%d.%d.%d\",\"dns\":\"%d.%d.%d.%d\",\"dhcp\":\"%d\",\"txtdays\":\"%d\",\"txtmonths\":\"%d\",\"txtyears\":\"%d\",\"txthours\":\"%d\",\"txtminutes\":\"%d\",\"txtseconds\":\"%d\",\"txtgps01\":\"%s\",\"txtgps02\":\"%s\",\"txtpower01\":\"%s\",\"txtpower02\":\"%s\"}",
 											netinfo.mac[0], netinfo.mac[1], netinfo.mac[2], netinfo.mac[3], netinfo.mac[4], netinfo.mac[5],
 											netinfo.ip[0], netinfo.ip[1], netinfo.ip[2], netinfo.ip[3],
 											netinfo.gw[0], netinfo.gw[1], netinfo.gw[2], netinfo.gw[3],
@@ -373,6 +420,8 @@ void make_json_netinfo(uint8_t * buf, uint16_t * len)
 											power1_stt?"ON":"OFF",
 											power2_stt?"ON":"OFF"
 											);
+	}		
+	
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

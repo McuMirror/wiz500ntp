@@ -88,22 +88,22 @@ void loadwebpages(void)
 		reg_httpServer_webContent((uint8_t *)"img.html", (uint8_t *)img_page);					// img.html 		: Base64 Image data example page
 
 		// Example #1
-		reg_httpServer_webContent((uint8_t *)"dio.html", (uint8_t *)dio_page);					// dio.html 		: Digital I/O control example page
-		reg_httpServer_webContent((uint8_t *)"dio.js", (uint8_t *)wiz550web_dio_js);			// dio.js 			: JavaScript for digital I/O control 	(+ ajax.js)
+		//reg_httpServer_webContent((uint8_t *)"dio.html", (uint8_t *)dio_page);					// dio.html 		: Digital I/O control example page
+		//reg_httpServer_webContent((uint8_t *)"dio.js", (uint8_t *)wiz550web_dio_js);			// dio.js 			: JavaScript for digital I/O control 	(+ ajax.js)
 
 		// Example #2
-		reg_httpServer_webContent((uint8_t *)"ain.html", (uint8_t *)ain_page);					// ain.html 		: Analog input monitor example page
-		reg_httpServer_webContent((uint8_t *)"ain.js", (uint8_t *)wiz550web_ain_js);			// ain.js 			: JavaScript for Analog input monitor	(+ ajax.js)
+		//reg_httpServer_webContent((uint8_t *)"ain.html", (uint8_t *)ain_page);					// ain.html 		: Analog input monitor example page
+		//reg_httpServer_webContent((uint8_t *)"ain.js", (uint8_t *)wiz550web_ain_js);			// ain.js 			: JavaScript for Analog input monitor	(+ ajax.js)
 
 		// Example #3
-		reg_httpServer_webContent((uint8_t *)"ain_gauge.html", (uint8_t *)ain_gauge_page);		// ain_gauge.html 	: Analog input monitor example page; using Google Gauge chart
-		reg_httpServer_webContent((uint8_t *)"ain_gauge.js", (uint8_t *)ain_gauge_js);			// ain_gauge.js 	: JavaScript for Google Gauge chart		(+ ajax.js)
+		//reg_httpServer_webContent((uint8_t *)"ain_gauge.html", (uint8_t *)ain_gauge_page);		// ain_gauge.html 	: Analog input monitor example page; using Google Gauge chart
+		//reg_httpServer_webContent((uint8_t *)"ain_gauge.js", (uint8_t *)ain_gauge_js);			// ain_gauge.js 	: JavaScript for Google Gauge chart		(+ ajax.js)
 
 		// AJAX JavaScript functions
 		reg_httpServer_webContent((uint8_t *)"ajax.js", (uint8_t *)wiz550web_ajax_js);			// ajax.js			: JavaScript for AJAX request transfer
 		
 		//favicon.ico
-		reg_httpServer_webContent((uint8_t *)"favicon.ico", (uint8_t *)pageico);			// favicon.ico
+		//reg_httpServer_webContent((uint8_t *)"favicon.ico", (uint8_t *)pageico);			// favicon.ico
 		//config page
 		reg_httpServer_webContent((uint8_t *)"config.html", (uint8_t *)configpage);			// config.html
 		display_reg_webContent_list();
@@ -385,7 +385,7 @@ static void send_http_response_body(uint8_t s, uint8_t * uri_name, uint8_t * buf
 		{
 			// Send process end
 			send_len = file_len;
-
+			//printf("> HTTPSocket[%d] : HTTP Response end - file len [ %u ]byte\r\n", s, send_len);
 #ifdef _HTTPSERVER_DEBUG_
 			printf("> HTTPSocket[%d] : HTTP Response end - file len [ %u ]byte\r\n", s, send_len);
 #endif
@@ -506,7 +506,7 @@ static void send_http_response_body(uint8_t s, uint8_t * uri_name, uint8_t * buf
 static void send_http_response_json(uint8_t s, uint8_t * buf, uint8_t * http_body, uint16_t file_len)
 {
 	uint16_t send_len = 0;
-
+	
 #ifdef _HTTPSERVER_DEBUG_
 	printf("> HTTPSocket[%d] : HTTP Response Header + Body - JSON\r\n", s);
 #endif
@@ -592,6 +592,7 @@ static void http_process_handler(uint8_t s, st_http_request * p_http_request)
 			printf("> HTTPSocket[%d] : Request Type = %d\r\n", s, p_http_request->TYPE);
 			printf("> HTTPSocket[%d] : Request URI = %s\r\n", s, uri_name);
 #endif
+			printf("> HTTPSocket[%d] : Request %s\r\n", s, uri_name);
 			//Xu ly cho tung kieu du lieu, html, cgi....?
 			if(p_http_request->TYPE == PTYPE_CGI)//https://en.wikipedia.org/wiki/Common_Gateway_Interface
 			{

@@ -61,7 +61,7 @@ typedef struct _datetime
 #define sntp_port 1234 //my sntp port, cho de gui ban ti ve
 #define ntp_port		123                     //ntp server port number
 #define SECS_PERDAY		86400UL             	// seconds in a day = 60*60*24
-#define UTC_ADJ_HRS		7              	        // Vietnam : GMT+7
+#define UTC_ADJ_HRS		0              	        // Vietnam : GMT+7
 #define EPOCH			1900                    // NTP start year
 
 void SNTP_init(void);

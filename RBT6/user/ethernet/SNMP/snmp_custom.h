@@ -11,7 +11,9 @@ extern "C" {
 #include <stdint.h>
 
 #include "snmp.h"
-
+#define LED_R 0
+#define LED_G 1
+#define LED_B 2
 extern dataEntryType snmpData[];
 extern const int32_t maxData;
 
@@ -26,7 +28,7 @@ void initTable();
 
 /* User defined functions: LED control examples */
 #ifdef _USE_WIZNET_W5500_EVB_
-	void get_LEDStatus_all(void *ptr, uint8_t *len);
+	void get_gpsStatus_all(void *ptr, uint8_t *len);
 	void set_LEDStatus_R(int32_t val);
 	void set_LEDStatus_G(int32_t val);
 	void set_LEDStatus_B(int32_t val);

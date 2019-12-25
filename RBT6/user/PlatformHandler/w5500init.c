@@ -158,11 +158,12 @@ void PHYStatus_Check(void)
 		if(tmp == PHY_LINK_OFF)
 		{
 			/* Turn on LED1 */
-			GPIO_PinWrite(GPIOA, 8, 0);
+			GPIO_PinWrite(GPIOC, 1, 1);
+			delay_ms(1000);
 		}
 		else{
 		/* Turn off LED1 */
-    GPIO_PinWrite(GPIOA, 8, 1);
+    GPIO_PinWrite(GPIOC, 1, 0);
 		}
 
 	//RGBLED_enable = LED_status_backup;

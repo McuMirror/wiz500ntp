@@ -37,7 +37,7 @@ int32_t NTPUDP(uint8_t sn)
                printf("%d: recvfrom error. %d\r\n",sn,ret);
                return ret;
             }
-					{
+					
 						//in ra ban tin
 						/*
 						for(i=0;i<48;i++)
@@ -45,48 +45,10 @@ int32_t NTPUDP(uint8_t sn)
 						   printf("%x ",*(clientPacket+i));
 						}
 						*/
-						//Tao ban tin NTP
-						//ntpserverdefaultconfig();
-						/*
-						serverPacket[0] = 0x24;   // LI, Version, Mode // Set version number and mode
-						serverPacket[1] = 1; // Stratum, or type of clock
-						serverPacket[2] = 0;     // Polling Interval
-						serverPacket[3] = -12;  // Peer Clock Precision
-						serverPacket[12] = 'G';
-						serverPacket[13] = 'P';
-						serverPacket[14] = 'S';
-
 						
-					serverPacket[0]=0x24;	// Leap 0x0, Version 0x3, Mode 0x4
-				  serverPacket[1]=0x03;	// Stratum 0x1, stratum (GPS)
-				  serverPacket[2]=0x06;	// polling minimum (64 seconds - default)
-				  //  serverPacket[3] = 0xFA; // precision (reference sketch - ~15 milliseconds)
-					//serverPacket[3] = 0xF7; // precision (2^-9 ~2 milliseconds)
-					serverPacket[3] = 0xE8; 
-					//  serverPacket[3] = 0x09; // precision (2^9 Testing)
-					// root delay
-					serverPacket[4]=0x0;
-					serverPacket[5]=0x0;
-					serverPacket[6]=0x2C;
-					serverPacket[7]=0x3C;
+						
 					
-					serverPacket[8]=0x0;
-					serverPacket[9]=0x0;
-					serverPacket[10]=0x0E;
-					serverPacket[11] = 0x7D; // root dispersion
 					
-					serverPacket[12]=0x47;	// Reference ID, "G"
-					serverPacket[13]=0x50;	// Reference ID, "P"
-					serverPacket[14]=0x53;	// Reference ID, "S"
-					serverPacket[15]=0x00;	// Reference ID, 0x00
-
-						*/
-					}
-					
-					//unixTime_last_sync = (timenow + STARTOFTIME);
-					//unixTime_last_sync = htonl(unixTime_last_sync);
-					//memcpy(&serverPacket[16], &unixTime_last_sync, 4);
-					//memcpy(&serverPacket[16], &clientPacket[40], 8);
 
 					
 						//Transmit Timestamp, T3 from client, copy and return! 
@@ -115,9 +77,9 @@ int32_t NTPUDP(uint8_t sn)
 						//micros_transmit = 100*ms10k;
 						micros_transmit = 100*(TIM3->CNT);
 						micros_transmit = (micros_transmit + 1) * USECSHIFT;
-						micros_transmit = htonl(micros_transmit);//Ko hieu lam gi nhi, nhung dung!
+						micros_transmit = htonl(micros_transmit);
 						memcpy(&serverPacket[44], &micros_transmit, 4);
-						memcpy(&serverPacket[16], &serverPacket[32], 8);//unixTime_last_sync == recvTime
+						
 						//Gui tra ban tin NTP
 						while(sentsize != NTP_PACKET_SIZE)
             {
@@ -175,11 +137,11 @@ void ntpserverdefaultconfig(void)
 	serverPacket[21]=0;
 	serverPacket[22]=0;
 	serverPacket[23]=0;
-					*/
+	*/
 					
-	unixTime_last_sync = (timenow + STARTOFTIME);//gio luc tryen ban tin
-	unixTime_last_sync = htonl(unixTime_last_sync);// gio luc truyen
-	memcpy(&serverPacket[16], &unixTime_last_sync, 4);
+	//unixTime_last_sync = (timenow + STARTOFTIME);//gio luc tryen ban tin
+	//unixTime_last_sync = htonl(unixTime_last_sync);// gio luc truyen
+	//memcpy(&serverPacket[16], &unixTime_last_sync, 4);
 }
 /********************************************************************************************************************/
 void wzn_event_handle(void)

@@ -91,6 +91,7 @@ void WIZ550webGPIO_config(void)
 	GPIO_PinConfigure(GPIOC, 1, GPIO_OUT_PUSH_PULL, GPIO_MODE_OUT10MHZ);
 	GPIO_PinWrite(GPIOC, 1, 1);
 	
+	/*
 	//LED0 PA8 
 	GPIO_PortClock   (GPIOA, true);
 	GPIO_PinConfigure(GPIOA, 8, GPIO_OUT_PUSH_PULL, GPIO_MODE_OUT10MHZ);
@@ -112,7 +113,7 @@ void WIZ550webGPIO_config(void)
 	GPIO_PortClock   (GPIOB, true);
 	GPIO_PinConfigure(GPIOB, 9, GPIO_OUT_PUSH_PULL, GPIO_MODE_OUT50MHZ);
 	GPIO_PinWrite(GPIOB, 9, 1);
-	
+	*/
 	// PB12 W5500_CS 
 	GPIO_PortClock   (GPIOB, true);
 	GPIO_PinConfigure(GPIOB, 12, GPIO_OUT_PUSH_PULL, GPIO_MODE_OUT50MHZ);

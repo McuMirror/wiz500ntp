@@ -1,4 +1,17 @@
 /*
+NOTE:
+- Neu thoi gian cua module ma khac gio that qua nhieu thi win10 se ko cap nhat vi thoi gian khac nhieu qua
+- 25/Dec/2019:
+ + Add factory reset system
+ + If lost master message, update to webserver => lost signal
+- 24/Dec/2019: 
+ + Sua loi phan nhan ban tin UART, cap nhat sai gio.
+ + Time ref chuyen vao phan nhan ban tin UART
+ + Add timeout of GPS master message
+ + Cai tien phan kiem tra day mang co cam hay ko?
+ + Them phan timeout of master vao SNMP table
+- 20/Dec/2019: Fix mot so loi
+	+ Phai chuyen toc do UART thanh 9600 de phu hop voi dong ho GPS clock
 - 23/Oct/2019 : Make new project on NTP PCB new, STM32F103RBT6. Check...
 								redefine STM32F10X_MD
 								HSE = 8MHz
@@ -23,10 +36,14 @@ SYSCLK:72000000
 //#define HSE_VALUE    ((uint32_t)12000000) /*!< Value of the External oscillator in Hz */
 //
 #include "main.h"
-time_t timenow = 1571818375;
+#define _U1_DEBUG_ENABLE_
+
+time_t timenow = 1577175287;
 volatile uint8_t sec_cnt = 0;
 int8_t ledstt;
-
+// lost signal : if after timeOutLostSignal seconds without GPS master message => lost
+int8_t lostSignal = LOST_GPS_MASTER;
+int8_t timeOutLostSignal = 30;
 uint8_t gps1_stt = 0;
 uint8_t gps2_stt = 0;
 uint8_t power1_stt = 0;
@@ -37,7 +54,8 @@ uint8_t years = 0;
 uint8_t hours = 0;
 uint8_t minutes = 0;
 uint8_t seconds = 0;
-
+struct tm currtime;
+void factoryRST(void);
 /**************************************************************************/
 int main(void)
 {	
@@ -68,14 +86,17 @@ int main(void)
 	test_eeprom();
 	//delay_ms(1);
 	//Thu vien tang cao
+	//Neu ham nay ko hoat dong: kiem tra cac chan GPIO khai bao!
 	w5500_lib_init();
 
 
-	
+	#ifdef _U1_DEBUG_ENABLE_
 	printf("Run, now is %s\r\n",ctime(&timenow));
+	#endif
+	#ifdef _GET_TIME_INTERNET_ENABLE_
 	//Get time from ntp time server
 	SNTP_init();
-	
+	#endif
 	
 	ntpserverdefaultconfig();
 	/* SNMP(Simple Network Management Protocol) Agent Initialize */
@@ -94,12 +115,19 @@ int main(void)
 		/**********************************************************************/
 		networkSevices();
 		/**********************************************************************/
-
+		if(GPIO_PinRead(GPIOC,0) ==0 ) 
+		{
+			delay_ms(2000);
+			if(GPIO_PinRead(GPIOC,0) ==0 ) printf("Reset factory setting\r\n");
+			factoryRST();
+			NVIC_SystemReset();
+		}
 		/**********************************************************************/
-		
+		// Tu chay dong ho va cap nhat thoi gian tu Internet
 		if(sec_cnt >= 1)
 		{
 			sec_cnt = 0;
+			#ifdef _GET_TIME_INTERNET_ENABLE_
 			//timeinfo = localtime( &timenow );
 			//printf("sec_cnt :%d, timenow :%d\r\n",sec_cnt,timenow);
 			//Neu ko co mang cai nay se gay treo??? 19/Sep/2019
@@ -107,14 +135,18 @@ int main(void)
 			//GPIO_PinWrite(GPIOA, 8, 1);
 			seconds++;
 			if(seconds == 60) seconds = 0;
-			
+			#endif
+
+			if(timeOutLostSignal) timeOutLostSignal--;
+			if(timeOutLostSignal == 0) lostSignal = LOST_GPS_MASTER;
 		}
 		/**********************************************************************/
-		//LED blinky : CPU run  
+		//LED blinky : CPU run, neu ko nhay thi la co van de!  
 		
 		if((msec_cnt < 100) &&(ledstt != 1)) {ledstt = 1;GPIO_PinWrite(GPIOC, 1, 0);}
 		else if((msec_cnt >= 100) &&(ledstt != 0)) {ledstt = 0 ; GPIO_PinWrite(GPIOC, 1, 1);}
 		/**********************************************************************/
+		//Xu ly thoi gian tu mach GPS master gui sang, neu ko nhan dc thi phai bao TIMEOUT
 		usart1Process();
 		
 		
@@ -143,7 +175,9 @@ void test_eeprom(void)
 	
 	if( (confirm[0] == 123) && (confirm[1] == 456) && (confirm[2] == 789))
 	{
+		#ifdef _U1_DEBUG_ENABLE_
 		printf("Right eeprom data, load configs now\r\n");
+		#endif
 		//Load IP
 		EE_ReadVariable(4,&a);
 		EE_ReadVariable(5,&b);
@@ -175,7 +209,9 @@ void test_eeprom(void)
 	}
 	else
 	{
+		#ifdef _U1_DEBUG_ENABLE_
 		printf("Wrong eeprom data\r\n");
+		#endif
 		EE_WriteVariable(0,123);
 		EE_WriteVariable(1,456);
 		EE_WriteVariable(2,789);
@@ -184,22 +220,70 @@ void test_eeprom(void)
 		EE_WriteVariable(5,168);
 		EE_WriteVariable(6,1);
 		EE_WriteVariable(7,246);
+		gWIZNETINFO.ip[0] = 192;
+		gWIZNETINFO.ip[1] = 168;
+		gWIZNETINFO.ip[2] = 1;
+		gWIZNETINFO.ip[3] = 246;
 		//GW: 192.168.1.1
 		EE_WriteVariable(8,192);
 		EE_WriteVariable(9,168);
 		EE_WriteVariable(10,1);
 		EE_WriteVariable(11,1);
+		gWIZNETINFO.gw[0] = 192;
+		gWIZNETINFO.gw[1] = 168;
+		gWIZNETINFO.gw[2] = 1;
+		gWIZNETINFO.gw[3] = 1;
 		//SN 255.255.255.0
 		EE_WriteVariable(12,255);
 		EE_WriteVariable(13,255);
 		EE_WriteVariable(14,255);
 		EE_WriteVariable(15,0);
+		gWIZNETINFO.sn[0] = 255;
+		gWIZNETINFO.sn[1] = 255;
+		gWIZNETINFO.sn[2] = 255;
+		gWIZNETINFO.sn[3] = 0;
 	}
 		
 
 }
 
-
+void factoryRST(void)
+	{
+		#ifdef _U1_DEBUG_ENABLE_
+		printf("Factory reset!\r\n");
+		#endif
+		EE_WriteVariable(0,123);
+		EE_WriteVariable(1,456);
+		EE_WriteVariable(2,789);
+		//IP 192.168.1.246
+		EE_WriteVariable(4,192);
+		EE_WriteVariable(5,168);
+		EE_WriteVariable(6,1);
+		EE_WriteVariable(7,246);
+		gWIZNETINFO.ip[0] = 192;
+		gWIZNETINFO.ip[1] = 168;
+		gWIZNETINFO.ip[2] = 1;
+		gWIZNETINFO.ip[3] = 246;
+		//GW: 192.168.1.1
+		EE_WriteVariable(8,192);
+		EE_WriteVariable(9,168);
+		EE_WriteVariable(10,1);
+		EE_WriteVariable(11,1);
+		gWIZNETINFO.gw[0] = 192;
+		gWIZNETINFO.gw[1] = 168;
+		gWIZNETINFO.gw[2] = 1;
+		gWIZNETINFO.gw[3] = 1;
+		//SN 255.255.255.0
+		EE_WriteVariable(12,255);
+		EE_WriteVariable(13,255);
+		EE_WriteVariable(14,255);
+		EE_WriteVariable(15,0);
+		gWIZNETINFO.sn[0] = 255;
+		gWIZNETINFO.sn[1] = 255;
+		gWIZNETINFO.sn[2] = 255;
+		gWIZNETINFO.sn[3] = 0;
+	}
+	
 void networkSevices(void)
 {
 	int32_t ret = 0;	
@@ -231,10 +315,56 @@ void networkSevices(void)
 		}
 }
 /**********************************************************************/
-// Chinh gio he thong theo ban tin GPS
-void configTimeFollowGPS(void)
-{//=> Ban tin GPS: $GPS034007060819AA10 
-	
+//Ham chuyen doi char sang int
+uint8_t convert_atoi( uint8_t c)
+{
+	return (uint8_t)c-48;
+}
+//Xu ly ban tin GPS
+void GPS_message_handle()
+{//=> Ban tin GPS: $GPS034007060819AA10	
+	if((USART1_rx_data_buff[0] =='$')&((USART1_rx_data_buff[1] =='G')|(USART1_rx_data_buff[1] =='g'))&((USART1_rx_data_buff[2] =='P')|(USART1_rx_data_buff[2] =='p'))&((USART1_rx_data_buff[3] =='S')|(USART1_rx_data_buff[3] =='s')))
+	{
+		/*Truyen gia tri gui len web server*/
+		//If there is not GPS master message, no time on webserver
+		days 		= 10*convert_atoi(USART1_rx_data_buff[10])+convert_atoi(USART1_rx_data_buff[11]);
+		months 	= 10*convert_atoi(USART1_rx_data_buff[12])+convert_atoi(USART1_rx_data_buff[13]);
+		years 	= 10*convert_atoi(USART1_rx_data_buff[14])+convert_atoi(USART1_rx_data_buff[15]);
+		hours 	= 10*convert_atoi(USART1_rx_data_buff[4])+convert_atoi(USART1_rx_data_buff[5]) -7 ;//UTC
+		minutes = 10*convert_atoi(USART1_rx_data_buff[6])+convert_atoi(USART1_rx_data_buff[7]);
+		seconds = 10*convert_atoi(USART1_rx_data_buff[8])+convert_atoi(USART1_rx_data_buff[9]);
+			
+		/*Cap nhap thoi gian NTP*/
+		currtime.tm_year = 100+ years;//100+10*convert_atoi(USART1_rx_data_buff[14])+convert_atoi(USART1_rx_data_buff[15]);//In fact: 2000+xxx-1900
+		currtime.tm_mon  = months-1;//10*convert_atoi(USART1_rx_data_buff[12])+convert_atoi(USART1_rx_data_buff[13])-1;
+		currtime.tm_mday = days;//10*convert_atoi(USART1_rx_data_buff[10])+convert_atoi(USART1_rx_data_buff[11]);
+		
+		currtime.tm_sec  = seconds;//10*convert_atoi(USART1_rx_data_buff[8])+convert_atoi(USART1_rx_data_buff[9]);
+		currtime.tm_min  = minutes;//10*convert_atoi(USART1_rx_data_buff[6])+convert_atoi(USART1_rx_data_buff[7]);
+		currtime.tm_hour = hours;//10*convert_atoi(USART1_rx_data_buff[4])+convert_atoi(USART1_rx_data_buff[5]);
+		timenow = mktime(&currtime);
+		
+		timeOutLostSignal = 30;//seconds 
+		lostSignal = GPS_MASTER_OK;
+		
+		#ifdef _U1_DEBUG_ENABLE_
+		printf("new timestamp:%d\r\n",timenow);
+		#endif
+		//Update last sync NTP time server field!
+		unixTime_last_sync = timenow + STARTOFTIME;
+		unixTime_last_sync = htonl(unixTime_last_sync);
+		memcpy(&serverPacket[16], &unixTime_last_sync, 4);
+		
+		//Update SNMP data table
+		if(USART1_rx_data_buff[16]=='A') gps1_stt = 1;
+		else gps1_stt = 0;
+		if(USART1_rx_data_buff[17]=='A') gps2_stt = 1;
+		else gps2_stt = 0;
+		if(USART1_rx_data_buff[18]=='1') power1_stt = 1;
+		else power1_stt = 0;
+		if(USART1_rx_data_buff[19]=='1') power2_stt = 1;
+		else power2_stt = 0;
+	}
 }
 //Xu ly ban tin GPS
 void usart1Process(void)
@@ -243,8 +373,10 @@ void usart1Process(void)
 			if(u1out == ONTIME)
 			{
 				u1out = STOP;// Da nhan du ban tin UART => Xy ly
+				#ifdef _U1_DEBUG_ENABLE_
 				printf("UART1:%s\r\n",USART1_rx_data_buff);
-				configTimeFollowGPS();
+				#endif
+				GPS_message_handle();
 				for(USART1_index=0;USART1_index<RX_BUFFER_SIZE0;USART1_index++)
 															{
 															USART1_rx_data_buff[USART1_index]=0;

@@ -24,7 +24,9 @@
 #include "eeprom_stm.h"
 #include "httpServer.h"
 #include "webpage.h"
+#ifdef _GET_TIME_INTERNET_ENABLE_
 #include "sntp.h"
+#endif
 #include "dns.h"
 
 /* Exported types ------------------------------------------------------------*/
@@ -37,5 +39,7 @@ void networkSevices(void);
 void loadwebpages(void);
 void usart1Process(void);
 void test_eeprom(void);
+#define GPS_MASTER_OK   1
+#define LOST_GPS_MASTER 0
 #endif /* __MAIN_H */
 
