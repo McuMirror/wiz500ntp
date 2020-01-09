@@ -495,6 +495,59 @@
 							
 #define configpage			"<!DOCTYPE html>"\
 "<html>"\
+	"<head>"\
+	"<title>GPS Master clock configuration</title>"\
+	"<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>"\
+		"<style>"\
+			"body{font-family: Arial, Tahoma;font-size: 14px;}"\
+			"#main{width: 500px;border: 1px solid #6495ED;padding: 0;margin-left: auto;margin-right: auto;}"\
+			"#head{border: 1px solid #CDCDCD;height: 70px;background-color:#008800;color:white;overflow: hidden;font-weight: bold;font-size:30px;text-align:center;margin-bottom:5px;}"\
+			"#foot{background-color: #0099FF;border:1px solid #ccc;color:black;font-size:15px;height: 20px;overflow: hidden;padding-top: 5px;padding-bottom: 5px;text-align:center;}"\
+ 			"h1{color:black;font-size:18px;text-align:center;}"\
+			"#net_info_general{min-height: 150px;border: 1px solid #CDCDCD;float:left;margin-bottom:5px;background-color: #F5F5DC;}"\
+			"#list_head{background-color:#FFCC99;height: 40px;width: 100%;display: inline-block;font-size: 18px;}"\
+			".tab{font-family:Arial; width: 498px; align : center; border: 0px; cellpadding:5px; cellspacing: 0px; height:50px;}"\
+		"</style>"\
+	"</head>"\
+	"<body>"\
+		"<div id='main'>"\
+			"<div id='head'>GPS MASTER CLOCK CONFIGURATION</div>"\
+			"<div id='net_info_general'>"\
+				"<div id ='list_head'>"\
+					"<h1>Network information</h1>"\
+				"</div>"\
+				"<div>"\
+					"<FORM METHOD='POST' action='config.cgi'>"\
+						"<table type ='table' class='tab'>"\
+							"<tbody>"\
+								"<tr>"\
+									"<td>IP adress:&nbsp</td>"\
+									"<td colspan='2'><input id='txtip' name='ip' type='text' value='192.168.1.246'/></td>"\
+								"</tr>"\
+								"<tr>"\
+									"<td>Subnet mask:&nbsp</td>"\
+									"<td colspan='2'><input id='txtsn' name='sn' type='text' value='255.255.255.0'/></td>"\
+								"</tr>"\
+								"<tr>"\
+									"<td></td>"\
+									"<td colspan='2'>"\
+										"<input type='submit' class ='btn' name='bt_setup' value='Save' id='bt_setup'>"\
+									"</td>"\
+								"</tr>"\
+							"</tbody>"\
+						"</table>"\
+					"</FORM>"\
+				"</div>"\
+			"</div>"\
+			"<div id = 'foot'>"\
+				"Powered by <a style='color: #000000; font-weight: bold; text-decoration: none'>Air Traffic Technical Company - <span style='color:red'>A</span><span style='color: blue;'>TTECH</span></a>"\
+			"</div>"\
+		"</div>"\
+	"</body>"\
+"</html>"
+
+#define fullconfigpage			"<!DOCTYPE html>"\
+"<html>"\
 "<body><CENTER>"\
 "<h3>IP config</h3>"\
 "<FORM METHOD='POST' action='config.cgi'><br>"\

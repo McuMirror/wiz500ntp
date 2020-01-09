@@ -1,5 +1,8 @@
 /*
-NOTE:
+NOTE: Chua chuyen UART ve 9600
+- 9/Jan/2020: fix loi thoi gian nhan vao qua uart la UTC nhung thoi gian gui qua NTP la UTC + 7
+							Them web config cua Tung va fullconfig.html
+- 3/Jan/2020: Thoi gian GPS la UTC nen ko can tru 7h 
 - Neu thoi gian cua module ma khac gio that qua nhieu thi win10 se ko cap nhat vi thoi gian khac nhieu qua
 - 25/Dec/2019:
  + Add factory reset system
@@ -36,9 +39,9 @@ SYSCLK:72000000
 //#define HSE_VALUE    ((uint32_t)12000000) /*!< Value of the External oscillator in Hz */
 //
 #include "main.h"
-#define _U1_DEBUG_ENABLE_
+//#define _U1_DEBUG_ENABLE_
 
-time_t timenow = 1577175287;
+time_t timenow = 1578034681;
 volatile uint8_t sec_cnt = 0;
 int8_t ledstt;
 // lost signal : if after timeOutLostSignal seconds without GPS master message => lost
@@ -215,24 +218,24 @@ void test_eeprom(void)
 		EE_WriteVariable(0,123);
 		EE_WriteVariable(1,456);
 		EE_WriteVariable(2,789);
-		//IP 192.168.1.246
+		//IP 192.168.22.165
 		EE_WriteVariable(4,192);
 		EE_WriteVariable(5,168);
-		EE_WriteVariable(6,1);
-		EE_WriteVariable(7,246);
+		EE_WriteVariable(6,22);
+		EE_WriteVariable(7,165);
 		gWIZNETINFO.ip[0] = 192;
 		gWIZNETINFO.ip[1] = 168;
-		gWIZNETINFO.ip[2] = 1;
-		gWIZNETINFO.ip[3] = 246;
-		//GW: 192.168.1.1
+		gWIZNETINFO.ip[2] = 22;
+		gWIZNETINFO.ip[3] = 165;
+		//GW: 192.168.22.1
 		EE_WriteVariable(8,192);
 		EE_WriteVariable(9,168);
-		EE_WriteVariable(10,1);
-		EE_WriteVariable(11,1);
+		EE_WriteVariable(10,22);
+		EE_WriteVariable(11,252);
 		gWIZNETINFO.gw[0] = 192;
 		gWIZNETINFO.gw[1] = 168;
-		gWIZNETINFO.gw[2] = 1;
-		gWIZNETINFO.gw[3] = 1;
+		gWIZNETINFO.gw[2] = 22;
+		gWIZNETINFO.gw[3] = 252;
 		//SN 255.255.255.0
 		EE_WriteVariable(12,255);
 		EE_WriteVariable(13,255);
@@ -255,24 +258,24 @@ void factoryRST(void)
 		EE_WriteVariable(0,123);
 		EE_WriteVariable(1,456);
 		EE_WriteVariable(2,789);
-		//IP 192.168.1.246
+		//IP 192.168.1.165
 		EE_WriteVariable(4,192);
 		EE_WriteVariable(5,168);
-		EE_WriteVariable(6,1);
-		EE_WriteVariable(7,246);
+		EE_WriteVariable(6,22);
+		EE_WriteVariable(7,165);
 		gWIZNETINFO.ip[0] = 192;
 		gWIZNETINFO.ip[1] = 168;
-		gWIZNETINFO.ip[2] = 1;
-		gWIZNETINFO.ip[3] = 246;
+		gWIZNETINFO.ip[2] = 22;
+		gWIZNETINFO.ip[3] = 165;
 		//GW: 192.168.1.1
 		EE_WriteVariable(8,192);
 		EE_WriteVariable(9,168);
-		EE_WriteVariable(10,1);
-		EE_WriteVariable(11,1);
+		EE_WriteVariable(10,22);
+		EE_WriteVariable(11,252);
 		gWIZNETINFO.gw[0] = 192;
 		gWIZNETINFO.gw[1] = 168;
-		gWIZNETINFO.gw[2] = 1;
-		gWIZNETINFO.gw[3] = 1;
+		gWIZNETINFO.gw[2] = 22;
+		gWIZNETINFO.gw[3] = 252;
 		//SN 255.255.255.0
 		EE_WriteVariable(12,255);
 		EE_WriteVariable(13,255);
@@ -301,11 +304,11 @@ void networkSevices(void)
     	// SNMP Agent daemon process : User can add the OID and OID mapped functions to snmpData[] array in snmprun.c/.h
 			// [net-snmp version 5.7 package for windows] is used for this demo.
 			// * Command example
-    	// [Command] Get:			  snmpget -v 1 -c public 192.168.1.246 .1.3.6.1.2.1.1.1.0 			// (sysDescr)
-    	// [Command] Get: 			snmpget -v 1 -c public 192.168.1.246 .1.3.6.1.4.1.6.1.0 			// (Custom, get LED status)
-    	// [Command] Get-Next: 	snmpwalk -v 1 -c public 192.168.1.246 .1.3.6.1
-			// [Command] Set: 			snmpset -v 1 -c public 192.168.1.246 .1.3.6.1.4.1.6.1.1 i 1			// (Custom, LED 'On')
-    	// [Command] Set: 			snmpset -v 1 -c public 192.168.1.246 .1.3.6.1.4.1.6.1.1 i 0			// (Custom, LED 'Off')
+    	// [Command] Get:			  snmpget -v 1 -c public 192.168.1.165 .1.3.6.1.2.1.1.1.0 			// (sysDescr)
+    	// [Command] Get: 			snmpget -v 1 -c public 192.168.1.165 .1.3.6.1.4.1.6.1.0 			// (Custom, get LED status)
+    	// [Command] Get-Next: 	snmpwalk -v 1 -c public 192.168.1.165 .1.3.6.1
+			// [Command] Set: 			snmpset -v 1 -c public 192.168.1.165 .1.3.6.1.4.1.6.1.1 i 1			// (Custom, LED 'On')
+    	// [Command] Set: 			snmpset -v 1 -c public 192.168.1.165 .1.3.6.1.4.1.6.1.1 i 0			// (Custom, LED 'Off')
 			snmpd_run();	
 	}
 	{	// web server 	
@@ -330,7 +333,7 @@ void GPS_message_handle()
 		days 		= 10*convert_atoi(USART1_rx_data_buff[10])+convert_atoi(USART1_rx_data_buff[11]);
 		months 	= 10*convert_atoi(USART1_rx_data_buff[12])+convert_atoi(USART1_rx_data_buff[13]);
 		years 	= 10*convert_atoi(USART1_rx_data_buff[14])+convert_atoi(USART1_rx_data_buff[15]);
-		hours 	= 10*convert_atoi(USART1_rx_data_buff[4])+convert_atoi(USART1_rx_data_buff[5]) -7 ;//UTC
+		hours 	= 10*convert_atoi(USART1_rx_data_buff[4])+convert_atoi(USART1_rx_data_buff[5])  ;//UTC
 		minutes = 10*convert_atoi(USART1_rx_data_buff[6])+convert_atoi(USART1_rx_data_buff[7]);
 		seconds = 10*convert_atoi(USART1_rx_data_buff[8])+convert_atoi(USART1_rx_data_buff[9]);
 			
@@ -343,7 +346,7 @@ void GPS_message_handle()
 		currtime.tm_min  = minutes;//10*convert_atoi(USART1_rx_data_buff[6])+convert_atoi(USART1_rx_data_buff[7]);
 		currtime.tm_hour = hours;//10*convert_atoi(USART1_rx_data_buff[4])+convert_atoi(USART1_rx_data_buff[5]);
 		timenow = mktime(&currtime);
-		
+		timenow = timenow - 25200;//Tru di 7 tieng
 		timeOutLostSignal = 30;//seconds 
 		lostSignal = GPS_MASTER_OK;
 		

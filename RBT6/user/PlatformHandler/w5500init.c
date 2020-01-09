@@ -6,9 +6,9 @@ extern volatile uint16_t phystatus_check_cnt;
 // WIZCHIP user should implement with your host spi peripheral //
 /////////////////////////////////////////////////////////////////
 wiz_NetInfo gWIZNETINFO = { .mac = {0x00, 0x08, 0xDC,0x4F, 0xEB, 0x6E},
-                            .ip = {192, 168, 1, 246},
+                            .ip = {192, 168, 22, 165},
                             .sn = {255,255,255,1},
-                            .gw = {192, 168, 1, 1},
+                            .gw = {192, 168, 22, 252},
                             .dns = {8,8,8,8},
                             .dhcp = NETINFO_STATIC };
 

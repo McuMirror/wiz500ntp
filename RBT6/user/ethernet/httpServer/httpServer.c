@@ -106,6 +106,7 @@ void loadwebpages(void)
 		//reg_httpServer_webContent((uint8_t *)"favicon.ico", (uint8_t *)pageico);			// favicon.ico
 		//config page
 		reg_httpServer_webContent((uint8_t *)"config.html", (uint8_t *)configpage);			// config.html
+		reg_httpServer_webContent((uint8_t *)"fullconfig.html", (uint8_t *)fullconfigpage);			// fullconfig.html
 		display_reg_webContent_list();
 }
 void httpServer_Sockinit(uint8_t cnt, uint8_t * socklist)
