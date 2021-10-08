@@ -41,7 +41,7 @@ SYSCLK:72000000
 #include "main.h"
 //#define _U1_DEBUG_ENABLE_
 
-time_t timenow = 1578034681;
+time_t timenow = 1579233375;
 volatile uint8_t sec_cnt = 0;
 int8_t ledstt;
 // lost signal : if after timeOutLostSignal seconds without GPS master message => lost
