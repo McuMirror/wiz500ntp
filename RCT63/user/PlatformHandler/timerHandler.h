@@ -13,7 +13,7 @@
 #define __TIMERHANDLER_H
 #include "stm32f10x.h"
 #include "time.h"
-#include "boardutil.h"
+
 #define ONTIME 1
 #define STOP   0
 //UART1 receiver timeout
