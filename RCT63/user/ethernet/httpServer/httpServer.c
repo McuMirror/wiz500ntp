@@ -107,7 +107,7 @@ void loadwebpages(void)
 		//config page
 		reg_httpServer_webContent((uint8_t *)"config.html", (uint8_t *)configpage);			// config.html
 		reg_httpServer_webContent((uint8_t *)"fullconfig.html", (uint8_t *)fullconfigpage);			// fullconfig.html
-		display_reg_webContent_list();
+		//display_reg_webContent_list();
 }
 void httpServer_Sockinit(uint8_t cnt, uint8_t * socklist)
 {
@@ -593,7 +593,7 @@ static void http_process_handler(uint8_t s, st_http_request * p_http_request)
 			printf("> HTTPSocket[%d] : Request Type = %d\r\n", s, p_http_request->TYPE);
 			printf("> HTTPSocket[%d] : Request URI = %s\r\n", s, uri_name);
 #endif
-			printf("> HTTPSocket[%d] : Request %s\r\n", s, uri_name);
+			//printf("> HTTPSocket[%d] : Request %s\r\n", s, uri_name);
 			//Xu ly cho tung kieu du lieu, html, cgi....?
 			if(p_http_request->TYPE == PTYPE_CGI)//https://en.wikipedia.org/wiki/Common_Gateway_Interface
 			{

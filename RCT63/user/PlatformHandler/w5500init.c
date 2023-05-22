@@ -5,11 +5,11 @@ extern volatile uint16_t phystatus_check_cnt;
 // SPI Callback function for accessing WIZCHIP                 //
 // WIZCHIP user should implement with your host spi peripheral //
 /////////////////////////////////////////////////////////////////
-wiz_NetInfo gWIZNETINFO = { .mac = {0x00, 0x08, 0xDC,0x4F, 0xEB, 0x6E},
+wiz_NetInfo gWIZNETINFO = { .mac = {0x00, 0x08, 0xDC,0x55, 0x01, 0x04},
                             .ip = {192, 168, 22, 165},
-                            .sn = {255,255,255,1},
-                            .gw = {192, 168, 22, 252},
-                            .dns = {8,8,8,8},
+                            .sn = {255,255,255,0},
+                            .gw = {0, 0, 0, 0},
+                            .dns = {0,0,0,0},
                             .dhcp = NETINFO_STATIC };
 
 uint8_t DNS_2nd[4]    = {168, 126, 63, 1};      // Secondary DNS server IP

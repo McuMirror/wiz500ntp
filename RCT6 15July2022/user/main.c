@@ -99,6 +99,9 @@ int main(void)
 	USART1_Init();
 	//printmcuclk();
 	/**********************************************************************/
+	//EEPROM STM32 init
+	sw_eeprom_stm32();
+	
 	if(GPIO_PinRead(GPIOC,0) == 0 ) 
 	{
 			delay_ms(2000);
@@ -107,8 +110,7 @@ int main(void)
 			NVIC_SystemReset();
 	}
 	//using stm32's flash to store data
-	//EEPROM STM32 init
-	sw_eeprom_stm32();
+	
 	test_eeprom();
 	//delay_ms(1);
 	//Thu vien tang cao
@@ -143,7 +145,14 @@ int main(void)
 			t_check_link_ms = 0;
 			checkDaymang();
 		}
-		networkSevices();
+		if(GPIO_PinRead(GPIOC,0) ==0 ) 
+		{
+			delay_ms(2000);
+			if(GPIO_PinRead(GPIOC,0) ==0 ) printf("Reset factory setting\r\n");
+			factoryRST();
+			NVIC_SystemReset();
+		}
+		
 		
 		/**********************************************************************/
 		// Tu chay dong ho va cap nhat thoi gian tu Internet
@@ -162,7 +171,7 @@ int main(void)
 		/**********************************************************************/
 		//Xu ly thoi gian tu mach GPS master gui sang, neu ko nhan dc thi phai bao TIMEOUT
 		usart1Process();
-		
+		networkSevices();
 	}//end of main while
 
 		
@@ -258,17 +267,17 @@ void factoryRST(void)
 		EE_WriteVariable(0,123);
 		EE_WriteVariable(1,456);
 		EE_WriteVariable(2,789);
-		//IP 192.168.1.165
-		EE_WriteVariable(4,device_net_config.ip[0]);
-		EE_WriteVariable(5,device_net_config.ip[1]);
-		EE_WriteVariable(6,device_net_config.ip[2]);
-		EE_WriteVariable(7,device_net_config.ip[3]);
+		//IP 192.168.22.165
+		EE_WriteVariable(4,192);
+		EE_WriteVariable(5,168);
+		EE_WriteVariable(6,22);
+		EE_WriteVariable(7,165);
 		
 		//GW: 192.168.1.1
-		EE_WriteVariable(8,device_net_config.gw[0]);
-		EE_WriteVariable(9,device_net_config.gw[0]);
-		EE_WriteVariable(10,device_net_config.gw[0]);
-		EE_WriteVariable(11,device_net_config.gw[0]);
+		EE_WriteVariable(8,0);
+		EE_WriteVariable(9,0);
+		EE_WriteVariable(10,0);
+		EE_WriteVariable(11,0);
 		
 		//SN 255.255.255.0
 		EE_WriteVariable(12,255);

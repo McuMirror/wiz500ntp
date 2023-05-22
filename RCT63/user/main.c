@@ -231,14 +231,14 @@ void test_eeprom(void)
 		gWIZNETINFO.ip[2] = 22;
 		gWIZNETINFO.ip[3] = 165;
 		//GW: 192.168.22.1
-		EE_WriteVariable(8,192);
-		EE_WriteVariable(9,168);
-		EE_WriteVariable(10,22);
-		EE_WriteVariable(11,252);
-		gWIZNETINFO.gw[0] = 192;
-		gWIZNETINFO.gw[1] = 168;
-		gWIZNETINFO.gw[2] = 22;
-		gWIZNETINFO.gw[3] = 252;
+		EE_WriteVariable(8,0);
+		EE_WriteVariable(9,0);
+		EE_WriteVariable(10,0);
+		EE_WriteVariable(11,0);
+		gWIZNETINFO.gw[0] = 0;
+		gWIZNETINFO.gw[1] = 0;
+		gWIZNETINFO.gw[2] = 0;
+		gWIZNETINFO.gw[3] = 0;
 		//SN 255.255.255.0
 		EE_WriteVariable(12,255);
 		EE_WriteVariable(13,255);
@@ -268,10 +268,10 @@ void factoryRST(void)
 		EE_WriteVariable(7,165);
 		
 		//GW: 192.168.1.1
-		EE_WriteVariable(8,192);
-		EE_WriteVariable(9,168);
-		EE_WriteVariable(10,22);
-		EE_WriteVariable(11,252);
+		EE_WriteVariable(8,0);
+		EE_WriteVariable(9,0);
+		EE_WriteVariable(10,0);
+		EE_WriteVariable(11,0);
 		
 		//SN 255.255.255.0
 		EE_WriteVariable(12,255);
